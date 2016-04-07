@@ -1,3 +1,5 @@
+# DoctrineExt
+
 #### 按主键查询
 ```
 $entity = \DoctrineExt::find('Sentrybox', $id);

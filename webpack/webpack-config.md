@@ -30,6 +30,10 @@ module.exports = config;
 ```
 
 #### IE8 兼容性
+https://github.com/reactjs/react-redux/pull/135
+https://github.com/zloirock/core-js
+https://github.com/reactjs/react-redux/issues/227
+
 > [es3-member-expression-literals](http://babeljs.io/docs/plugins/transform-es3-member-expression-literals/)
 ```
 In

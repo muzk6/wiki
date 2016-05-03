@@ -28,3 +28,36 @@ var config = {
 
 module.exports = config;
 ```
+
+#### IE8 兼容性
+> [es3-member-expression-literals](http://babeljs.io/docs/plugins/transform-es3-member-expression-literals/)
+```
+In
+    foo.catch;
+Out
+    foo["catch"];
+```
+`$ npm install babel-plugin-transform-es3-member-expression-literals`
+```
+{
+  "plugins": ["transform-es3-member-expression-literals"]
+}
+```
+
+> [es3-property-literals](http://babeljs.io/docs/plugins/transform-es3-property-literals/)
+```
+In
+    var foo = {
+      catch: function () {}
+    };
+Out
+    var foo = {
+      "catch": function () {}
+    };
+```
+`$ npm install babel-plugin-transform-es3-property-literals`
+```
+{
+  "plugins": ["transform-es3-property-literals"]
+}
+```

@@ -1,6 +1,6 @@
 # babel
 
-#### `webpack Unexpected token <`
+## webpack Unexpected token <
 
 > [babel-loader jsx SyntaxError: Unexpected token](http://stackoverflow.com/questions/33460420/babel-loader-jsx-syntaxerror-unexpected-token)
 
@@ -17,7 +17,9 @@
 }
 ```
 
-#### `Unexpected token import`
+---
+
+## Unexpected token import
 `npm install --save-dev babel-preset-es2015`
 ```
 {

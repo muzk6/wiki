@@ -34,19 +34,51 @@ module.exports = config;
 ---
 
 ## 分离打包第三方框架
-> 分离 jquery
+> 优化重合并
 ```
 var path = require('path');
 var webpack = require('webpack');
+var nodeModulesDir = path.resolve(__dirname, 'node_modules');
+
+var vendors = ((mods) => {
+    let vendors = {};
+    vendors.aliases = [];
+    vendors.names = [];
+    vendors.paths = [];
+
+    mods.forEach((mod) => {
+        let name = mod.name;
+        let relPath = path.resolve(nodeModulesDir, mod.path);
+
+        vendors.names.push(name);
+        vendors.paths.push(relPath);
+
+        let alias = {};
+        alias[name] = relPath;
+        vendors.aliases.push(alias);
+    });
+
+    return vendors;
+})([
+    {name: 'jquery', path: 'jquery/dist/jquery.min.js'},
+    {name: 'react', path: 'react/dist/react.min.js'},
+    {name: 'react-dom', path: 'react-dom/dist/react-dom.min.js'}
+]);
 
 module.exports = {
     entry: {
         app: path.resolve(__dirname, 'app/main.js'),
-        vendors: ['jquery']
+        vendors: vendors.names // 需要合并打包的库
+    },
+    resolve: {
+        alias: vendors.aliases // 每当 "react" 在代码中被引入，它会使用压缩后的 React JS 文件，而不是到 node_modules 中找
     },
     output: {
         path: path.resolve(__dirname, './dist'),
         filename: 'app.js'
+    },
+    module: {
+        noParse: vendors.paths // 每当 Webpack 尝试去解析那个压缩后的文件，我们阻止它，因为这不必要
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')

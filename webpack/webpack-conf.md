@@ -98,3 +98,46 @@ module.exports = {
 * --progress - 显示合并代码进度
 * --colors - Yay，命令行中显示颜色！
 * --content-base build - 指向设置的输出目录
+
+## 查找依赖
+> Webpack 是类似 Browserify 那样在本地按目录对依赖进行查找的 可以构造一个例子, 用 --display-error-details 查看查找过程, 例子当中 resolve.extensions 用于指明程序自动补全识别哪些后缀, 注意一下, extensions 第一个是空字符串! 对应不需要后缀的情况
+
+* webpack.config.js
+```
+module.exports = {
+  entry: './a.js',
+  output: {
+    filename: 'b.js'
+  },
+  resolve: {
+    extensions: ['', '.coffee', '.js']
+  }
+}
+```
+
+* a.js
+> ./c 是不存在, 从这个错误信息当中我们大致能了解 Webpack 是怎样查找的 大概就是会尝试各种文件名, 会尝试作为模块, 等等 一般模块就是查找 node_modules, 但这个也是能被配置的:
+`require('./c')`
+```
+➤➤ webpack --display-error-details
+Hash: e38f7089c39a1cf34032
+Version: webpack 1.5.3
+Time: 54ms
+Asset  Size  Chunks             Chunk Names
+ b.js  1646       0  [emitted]  main
+   [0] ./a.js 15 {0} [built] [1 error]
+
+ERROR in ./a.js
+Module not found: Error: Cannot resolve 'file' or 'directory' ./c in /Users/chen/Drafts/webpack/details
+resolve file
+  /Users/chen/Drafts/webpack/details/c doesn't exist
+  /Users/chen/Drafts/webpack/details/c.coffee doesn't exist
+  /Users/chen/Drafts/webpack/details/c.js doesn't exist
+resolve directory
+  /Users/chen/Drafts/webpack/details/c doesn't exist (directory default file)
+  /Users/chen/Drafts/webpack/details/c/package.json doesn't exist (directory description file)
+[/Users/chen/Drafts/webpack/details/c]
+[/Users/chen/Drafts/webpack/details/c.coffee]
+[/Users/chen/Drafts/webpack/details/c.js]
+ @ ./a.js 2:0-14
+```

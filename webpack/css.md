@@ -13,6 +13,7 @@
 module: {
 loaders: [{
   test: /\.css$/, // Only .css files
+  exclude: /node_modules/,
   loader: 'style!css' // Run both loaders
 }]
 }
@@ -66,15 +67,18 @@ export default React.createClass({
 ```
 
 ## 内联图片
-> 把图片转成base64字符串内联到 CSS 里来降低必要的请求数
+把图片转成base64字符串内联到 CSS 里来降低必要的请求数
+
 `npm install url-loader file-loader --save-dev`
 
 * 配置
-> url-loader 传入的 limit 参数是告诉它图片如果不大于 25KB 的话要自动在它从属的 css 文件中转成 BASE64 字符串
+
+    url-loader 传入的 limit 参数是告诉它图片如果不大于 25KB 的话要自动在它从属的 css 文件中转成 BASE64 字符串
 ```
 module: {
     loaders: [{
       test: /\.(png|jpg)$/,
+      exclude: /node_modules/,
       loader: 'url',
       query: {
           limit: 25000

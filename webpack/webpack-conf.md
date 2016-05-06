@@ -34,7 +34,9 @@ module.exports = config;
 ---
 
 ## 分离打包第三方框架
-> 优化重合并
+* 优化重合并
+
+    会生成三个js文件 app.js mobile.js vendors.js 其中 vendors.js 的名字并不是从 [name].js 配置项得来，而是从优先级更高的 CommonsChunkPlugin('vendors', 'vendors.js') 得来
 ```
 var path = require('path');
 var webpack = require('webpack');
@@ -68,6 +70,7 @@ var vendors = ((mods) => {
 module.exports = {
     entry: {
         app: path.resolve(__dirname, 'app/main.js'),
+        mobile: path.resolve(__dirname, 'app/mobile.js'),
         vendors: vendors.names // 需要合并打包的库
     },
     resolve: {
@@ -75,7 +78,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, './dist'),
-        filename: 'app.js'
+        filename: '[name].js'
     },
     module: {
         noParse: vendors.paths // 每当 Webpack 尝试去解析那个压缩后的文件，我们阻止它，因为这不必要
@@ -116,7 +119,7 @@ module.exports = {
 ```
 
 * a.js
-> ./c 是不存在, 从这个错误信息当中我们大致能了解 Webpack 是怎样查找的 大概就是会尝试各种文件名, 会尝试作为模块, 等等 一般模块就是查找 node_modules, 但这个也是能被配置的:
+    ./c 是不存在, 从这个错误信息当中我们大致能了解 Webpack 是怎样查找的 大概就是会尝试各种文件名, 会尝试作为模块, 等等 一般模块就是查找 node_modules, 但这个也是能被配置的:
 `require('./c')`
 ```
 ➤➤ webpack --display-error-details

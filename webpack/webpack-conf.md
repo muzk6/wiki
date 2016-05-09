@@ -9,6 +9,8 @@ webpack 初始化配置
 会生成三个js文件 app.js mobile.js vendors.js 其中 vendors.js 的名字并不是从 [name].js 配置项得来，而是从优先级更高的 CommonsChunkPlugin('vendors', 'vendors.js') 得来
 
 ```
+'use strict';
+
 var path = require('path');
 var webpack = require('webpack');
 var nodeModulesDir = path.resolve(__dirname, 'node_modules');

@@ -8,15 +8,32 @@
 
 ## 配置
 
-* webpack.config.js
+* 直接嵌入到html的style元素中
 
 ```
 module: {
-loaders: [{
-  test: /\.css$/, // Only .css files
-  exclude: /node_modules/,
-  loaders: ['css', 'style'] // Run both loaders
-}]
+    loaders: [{
+        test: /\.css$/, // Only .css files
+        loaders: ['style', 'css'] // Run both loaders
+    }]
+}
+```
+
+* 独立出CSS文件来
+
+`$ npm install extract-text-webpack-plugin --save`
+
+```
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+
+module: {
+    loaders: [{
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract('style', 'css')
+    }],
+    plugins: [
+        new ExtractTextPlugin('style.css', {allChunks: true}) // 合成一个文件
+    ]
 }
 ```
 
@@ -81,7 +98,6 @@ url-loader 传入的 limit 参数是告诉它图片如果不大于 25KB 的话�
 module: {
     loaders: [{
       test: /\.(png|jpg)$/,
-      exclude: /node_modules/,
       loader: 'url',
       query: {
           limit: 25000

@@ -1,42 +1,13 @@
 # config
-> webpack 初始化配置
 
-## react + es6
-* npm dependencies
-
-`npm install --save-dev babel-loader babel-core babel-preset-react babel-preset-es2015 react react-dom`
-
-* webpack.config.js
-
-```
-var path = require('path');
-var config = {
-    entry: path.resolve(__dirname, 'app/main.js'),
-    output: {
-        path: path.resolve(__dirname, 'build'),
-        filename: 'bundle.js'
-    },
-    module: {
-        loaders: [{
-            test: /\.jsx?$/, // 用正则来匹配文件路径，这段意思是匹配 js 或者 jsx
-            exclude: /node_modules/,
-            loader: 'babel', // 加载模块 "babel" 是 "babel-loader" 的缩写
-            query: {
-                presets: ['react', 'es2015']
-            }
-        }]
-    }
-};
-
-module.exports = config;
-```
-
----
+webpack 初始化配置
 
 ## 分离打包第三方框架
+
 * 优化重合并
 
-    会生成三个js文件 app.js mobile.js vendors.js 其中 vendors.js 的名字并不是从 [name].js 配置项得来，而是从优先级更高的 CommonsChunkPlugin('vendors', 'vendors.js') 得来
+会生成三个js文件 app.js mobile.js vendors.js 其中 vendors.js 的名字并不是从 [name].js 配置项得来，而是从优先级更高的 CommonsChunkPlugin('vendors', 'vendors.js') 得来
+
 ```
 var path = require('path');
 var webpack = require('webpack');
@@ -89,9 +60,8 @@ module.exports = {
 };
 ```
 
----
-
 ## 浏览器自动刷新
+
 > [webpack-dev-server](http://fakefish.github.io/react-webpack-cookbook/Running-a-workflow.html)
 
 `webpack-dev-server --devtool eval --progress --colors --hot --content-base build`
@@ -103,7 +73,8 @@ module.exports = {
 * --content-base build - 指向设置的输出目录
 
 ## 查找依赖
-> Webpack 是类似 Browserify 那样在本地按目录对依赖进行查找的 可以构造一个例子, 用 --display-error-details 查看查找过程, 例子当中 resolve.extensions 用于指明程序自动补全识别哪些后缀, 注意一下, extensions 第一个是空字符串! 对应不需要后缀的情况
+
+Webpack 是类似 Browserify 那样在本地按目录对依赖进行查找的 可以构造一个例子, 用 --display-error-details 查看查找过程, 例子当中 resolve.extensions 用于指明程序自动补全识别哪些后缀, 注意一下, extensions 第一个是空字符串! 对应不需要后缀的情况
 
 * webpack.config.js
 ```
@@ -119,8 +90,11 @@ module.exports = {
 ```
 
 * a.js
-    ./c 是不存在, 从这个错误信息当中我们大致能了解 Webpack 是怎样查找的 大概就是会尝试各种文件名, 会尝试作为模块, 等等 一般模块就是查找 node_modules, 但这个也是能被配置的:
+
+./c 是不存在, 从这个错误信息当中我们大致能了解 Webpack 是怎样查找的 大概就是会尝试各种文件名, 会尝试作为模块, 等等 一般模块就是查找 node_modules, 但这个也是能被配置的:
+
 `require('./c')`
+
 ```
 ➤➤ webpack --display-error-details
 Hash: e38f7089c39a1cf34032

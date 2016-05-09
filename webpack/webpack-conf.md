@@ -9,57 +9,59 @@ webpack 初始化配置
 会生成三个js文件 app.js mobile.js vendors.js 其中 vendors.js 的名字并不是从 [name].js 配置项得来，而是从优先级更高的 CommonsChunkPlugin('vendors', 'vendors.js') 得来
 
 ```
-'use strict';
-
 var path = require('path');
 var webpack = require('webpack');
 var nodeModulesDir = path.resolve(__dirname, 'node_modules');
 
-var vendors = ((mods) => {
-    let vendors = {};
-    vendors.aliases = [];
-    vendors.names = [];
-    vendors.paths = [];
+var deps = [
+    'jquery/dist/jquery.min.js',
+    'react/dist/react.min.js',
+    'react-dom/dist/react-dom.min.js'
+];
 
-    mods.forEach((mod) => {
-        let name = mod.name;
-        let relPath = path.resolve(nodeModulesDir, mod.path);
-
-        vendors.names.push(name);
-        vendors.paths.push(relPath);
-
-        let alias = {};
-        alias[name] = relPath;
-        vendors.aliases.push(alias);
-    });
-
-    return vendors;
-})([
-    {name: 'jquery', path: 'jquery/dist/jquery.min.js'},
-    {name: 'react', path: 'react/dist/react.min.js'},
-    {name: 'react-dom', path: 'react-dom/dist/react-dom.min.js'}
-]);
-
-module.exports = {
+var config = {
     entry: {
         app: path.resolve(__dirname, 'app/main.js'),
         mobile: path.resolve(__dirname, 'app/mobile.js'),
-        vendors: vendors.names // 需要合并打包的库
+        vendors: [] // 需要合并打包的库
     },
     resolve: {
-        alias: vendors.aliases // 每当 "react" 在代码中被引入，它会使用压缩后的 React JS 文件，而不是到 node_modules 中找
+        alias: {} // 每当 "react" 在代码中被引入，它会使用压缩后的 React JS 文件，而不是到 node_modules 中找
     },
     output: {
         path: path.resolve(__dirname, './dist'),
         filename: '[name].js'
     },
     module: {
-        noParse: vendors.paths // 每当 Webpack 尝试去解析那个压缩后的文件，我们阻止它，因为这不必要
+        noParse: [] // 每当 Webpack 尝试去解析那个压缩后的文件，我们阻止它，因为这不必要
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
     ]
 };
+
+deps.forEach(function (dep) {
+    var depPath = path.resolve(nodeModulesDir, dep);
+    config.entry.vendors.push(depPath);
+    config.module.noParse.push(depPath);
+    config.resolve.alias[dep.split(path.sep)[0]] = depPath;
+});
+```
+
+## 压缩丑化
+
+> [创建库](http://fakefish.github.io/react-webpack-cookbook/Authoring-libraries.html)
+
+```
+module.exports = {
+    plugins: [
+      new webpack.optimize.UglifyJsPlugin({
+          compress: {
+              warnings: false
+          },
+      }),
+    ]
+}
 ```
 
 ## 浏览器自动刷新
@@ -81,13 +83,13 @@ Webpack 是类似 Browserify 那样在本地按目录对依赖进行查找的 �
 * webpack.config.js
 ```
 module.exports = {
-  entry: './a.js',
-  output: {
+    entry: './a.js',
+    output: {
     filename: 'b.js'
-  },
-  resolve: {
+    },
+    resolve: {
     extensions: ['', '.coffee', '.js']
-  }
+    }
 }
 ```
 

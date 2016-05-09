@@ -15,7 +15,7 @@ module: {
 loaders: [{
   test: /\.css$/, // Only .css files
   exclude: /node_modules/,
-  loader: 'style!css' // Run both loaders
+  loaders: ['css', 'style'] // Run both loaders
 }]
 }
 ```

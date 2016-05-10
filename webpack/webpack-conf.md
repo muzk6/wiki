@@ -71,6 +71,9 @@ $ webpack // 最基本的启动webpack方法
 $ webpack -w // 提供watch方法，实时进行打包更新
 $ webpack -p // 对打包后的文件进行压缩，提供production
 $ webpack -d // 提供source map，方便调试。
+$ webpack --colors // 输出结果带彩色，比如：会用红色显示耗时较长的步骤
+$ webpack --profile // 输出性能数据，可以看到每一步的耗时
+$ webpack --display-modules // 默认情况下 node_modules 下的模块会被隐藏，加上这个参数可以显示这些被隐藏的模块
 ```
 
 ## publicPath 配置
@@ -87,9 +90,11 @@ $ webpack -d // 提供source map，方便调试。
 | ./dir | ./dirstyle.css |
 
 
-## 浏览器自动刷新
+## 静态资源服务器
 
 > [webpack-dev-server](http://fakefish.github.io/react-webpack-cookbook/Running-a-workflow.html)
+
+除了提供模块打包功能，Webpack还提供了一个基于Node.js Express框架的开发服务器，它是一个静态资源Web服务器，对于简单静态页面或者仅依赖于独立服务的前端页面，都可以直接使用这个开发服务器进行开发。在开发过程中，开发服务器会监听每一个文件的变化，进行实时打包，并且可以推送通知前端页面代码发生了变化，从而可以实现页面的自动刷新
 
 `webpack-dev-server --devtool eval --progress --colors --hot --content-base build`
 
@@ -98,6 +103,18 @@ $ webpack -d // 提供source map，方便调试。
 * --progress - 显示合并代码进度
 * --colors - Yay，命令行中显示颜色！
 * --content-base build - 指向设置的输出目录
+
+## 设置环境变量
+
+* 在package.json里面的script设置环境变量，注意mac与windows的设置方式不一样
+* 注意环境变量值后面不能有空格，否则会把空格当成值的一部分
+
+```
+"scripts": {
+    "publish-mac": "export NODE_ENV=prod&& webpack -p --progress --colors",
+    "publish-win":  "set NODE_ENV=prod&& webpack -p --progress --colors"
+}
+```
 
 ## 查找依赖
 

@@ -73,6 +73,20 @@ $ webpack -p // 对打包后的文件进行压缩，提供production
 $ webpack -d // 提供source map，方便调试。
 ```
 
+## publicPath 配置
+
+给自动生成的URL加上的“前缀”
+
+* 插件 extract-text-webpack-plugin 生成独立CSS文件时的URL例子
+* 第三个例子的URL就是连起来的，之间没 / 隔开，所以 publicPath 可以理解成一个单纯的 URL 字符串前缀
+
+| publicPath | URL |
+| :---: | :---: |
+| /dir/ | /dir/style.css |
+| ./dir/ | ./dir/style.css |
+| ./dir | ./dirstyle.css |
+
+
 ## 浏览器自动刷新
 
 > [webpack-dev-server](http://fakefish.github.io/react-webpack-cookbook/Running-a-workflow.html)

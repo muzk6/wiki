@@ -48,6 +48,8 @@ deps.forEach(function (dep) {
     config.module.noParse.push(depPath);
     config.resolve.alias[dep.split(path.sep)[0]] = depPath;
 });
+
+module.exports = config;
 ```
 
 ## 压缩丑化

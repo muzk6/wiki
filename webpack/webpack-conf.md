@@ -108,18 +108,6 @@ $ webpack --display-modules // 默认情况下 node_modules 下的模块会被�
 * --colors - Yay，命令行中显示颜色！
 * --content-base build - 指向设置的输出目录
 
-## 设置环境变量
-
-* 在package.json里面的script设置环境变量，注意mac与windows的设置方式不一样
-* 注意环境变量值后面不能有空格，否则会把空格当成值的一部分
-
-```
-"scripts": {
-    "publish-mac": "export NODE_ENV=prod&& webpack -p --progress --colors",
-    "publish-win":  "set NODE_ENV=prod&& webpack -p --progress --colors"
-}
-```
-
 ## 查找依赖
 
 Webpack 是类似 Browserify 那样在本地按目录对依赖进行查找的 可以构造一个例子, 用 --display-error-details 查看查找过程, 例子当中 resolve.extensions 用于指明程序自动补全识别哪些后缀, 注意一下, extensions 第一个是空字符串! 对应不需要后缀的情况

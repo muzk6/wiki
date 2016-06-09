@@ -9,9 +9,8 @@
 * webpack config
 
 ```
-loaders: [{
-      test: /\.vue$/,
-      loader: 'vue'
-  }]
-}
+module.loaders: [{
+  test: /\.vue$/,
+  loader: 'vue'
+}]
 ```

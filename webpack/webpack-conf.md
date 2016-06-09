@@ -8,7 +8,7 @@ webpack 初始化配置
 
 会生成三个js文件 app.js mobile.js vendors.js 其中 vendors.js 的名字并不是从 [name].js 配置项得来，而是从优先级更高的 CommonsChunkPlugin('vendors', 'vendors.js') 得来
 
-> webpack.config.js
+* webpack.config.js
 
 ```
 var path = require('path');
@@ -28,7 +28,7 @@ var config = {
         mobile: path.resolve(__dirname, 'app/mobile.js')
     },
     resolve: {
-        alias: {} // 每当 "react" 在代码中被引入，它会使用压缩后的 React JS 文件，而不是到 node_modules 中找
+        alias: {} // 为 deps 里的模块定义别名，之后引用模块时不再需要使用全路径名，只使用别名即可
     },
     output: {
         path: path.resolve(__dirname, './dist'),
@@ -52,20 +52,15 @@ deps.forEach(function (dep) {
 module.exports = config;
 ```
 
-## 压缩丑化
+## 模块全局化
 
-> [创建库](http://fakefish.github.io/react-webpack-cookbook/Authoring-libraries.html)
+* 在模块文件内不需要引入，即可直接调用
+* 值 'vue' 是在配置 resolve.alias 中映射了别名，如果没映射，就需要提供全绝对路径
 
 ```
-module.exports = {
-    plugins: [
-      new webpack.optimize.UglifyJsPlugin({
-          compress: {
-              warnings: false
-          },
-      }),
-    ]
-}
+new webpack.ProvidePlugin({
+    Vue: 'vue'
+})
 ```
 
 ## webpack 命令行的几种基本命令
@@ -80,15 +75,20 @@ $ webpack --profile // 输出性能数据，可以看到每一步的耗时
 $ webpack --display-modules // 默认情况下 node_modules 下的模块会被隐藏，加上这个参数可以显示这些被隐藏的模块
 ```
 
-## 模块全局化
+## 压缩丑化
 
-* 在模块文件内不需要引入，即可直接调用
-* 值 'vue' 是在配置 resolve.alias 中映射了别名，如果没映射，就需要提供全绝对路径
+> [创建库](http://fakefish.github.io/react-webpack-cookbook/Authoring-libraries.html)
 
 ```
-new webpack.ProvidePlugin({
-    Vue: 'vue'
-})
+module.exports = {
+    plugins: [
+      new webpack.optimize.UglifyJsPlugin({
+          compress: {
+              warnings: false
+          },
+      }),
+    ]
+}
 ```
 
 ## publicPath 配置
@@ -124,6 +124,7 @@ new webpack.ProvidePlugin({
 Webpack 是类似 Browserify 那样在本地按目录对依赖进行查找的 可以构造一个例子, 用 --display-error-details 查看查找过程, 例子当中 resolve.extensions 用于指明程序自动补全识别哪些后缀, 注意一下, extensions 第一个是空字符串! 对应不需要后缀的情况
 
 * webpack.config.js
+
 ```
 module.exports = {
     entry: './a.js',

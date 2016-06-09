@@ -23,9 +23,9 @@ var deps = [
 
 var config = {
     entry: {
+        vendors: [], // 需要合并打包的库
         app: path.resolve(__dirname, 'app/main.js'),
-        mobile: path.resolve(__dirname, 'app/mobile.js'),
-        vendors: [] // 需要合并打包的库
+        mobile: path.resolve(__dirname, 'app/mobile.js')
     },
     resolve: {
         alias: {} // 每当 "react" 在代码中被引入，它会使用压缩后的 React JS 文件，而不是到 node_modules 中找

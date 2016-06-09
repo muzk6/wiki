@@ -80,6 +80,17 @@ $ webpack --profile // 输出性能数据，可以看到每一步的耗时
 $ webpack --display-modules // 默认情况下 node_modules 下的模块会被隐藏，加上这个参数可以显示这些被隐藏的模块
 ```
 
+## 模块全局化
+
+* 在模块文件内不需要引入，即可直接调用
+* 值 'vue' 是在配置 resolve.alias 中映射了别名，如果没映射，就需要提供全绝对路径
+
+```
+new webpack.ProvidePlugin({
+    Vue: 'vue'
+})
+```
+
 ## publicPath 配置
 
 给自动生成的URL加上的“前缀”

@@ -2,7 +2,7 @@
 
 webpack 初始化配置
 
-## 通用模板（分离打包第三方框架）
+## 通用模板（分离打包第三方库）
 
 * 优化重合并
 
@@ -14,12 +14,18 @@ webpack 初始化配置
 var path = require('path');
 var webpack = require('webpack');
 var nodeModulesDir = path.resolve(__dirname, 'node_modules');
+var libDir = path.resolve(__dirname, 'library');
 
-var deps = [
-    'jquery/dist/jquery.min.js',
-    'react/dist/react.min.js',
-    'react-dom/dist/react-dom.min.js'
-];
+var deps = {
+    'node': [
+        'jquery/dist/jquery.min.js',
+        'react/dist/react.min.js',
+        'react-dom/dist/react-dom.min.js'
+    ],
+    'etc': {
+        'othername': path.resolve(libDir, 'othername.js')
+    }
+};
 
 var config = {
     entry: {
@@ -28,10 +34,11 @@ var config = {
         mobile: path.resolve(__dirname, 'app/mobile.js')
     },
     resolve: {
-        alias: {} // 为 deps 里的模块定义别名，之后引用模块时不再需要使用全路径名，只使用别名即可
+        alias: {}, // 为 deps 里的模块定义别名，之后引用模块时不再需要使用全路径名，只使用别名即可
+        extensions: ['', '.coffee', '.js'] // 文件默认后缀，依次从 无后缀 .coffee .js 这三个顺序查找匹配文件，注意：无后缀的设置必须上加上，否则会出现莫名异常
     },
     output: {
-        path: path.resolve(__dirname, './dist'),
+        path: path.resolve(__dirname, 'dist'),
         filename: '[name].js'
     },
     module: {
@@ -42,12 +49,19 @@ var config = {
     ]
 };
 
-deps.forEach(function (dep) {
-    var depPath = path.resolve(nodeModulesDir, dep);
+deps.node.forEach(function (dep) {
+    let depPath = path.resolve(nodeModulesDir, dep);
     config.entry.vendors.push(depPath);
     config.module.noParse.push(depPath);
     config.resolve.alias[dep.split(path.sep)[0]] = depPath;
 });
+
+for (let name in deps.etc) {
+    let depPath = deps.etc[name];
+    config.entry.vendors.push(depPath);
+    config.module.noParse.push(depPath);
+    config.resolve.alias[name] = depPath;
+}
 
 module.exports = config;
 ```
@@ -58,9 +72,14 @@ module.exports = config;
 * 值 'vue' 是在配置 resolve.alias 中映射了别名，如果没映射，就需要提供全绝对路径
 
 ```
-new webpack.ProvidePlugin({
-    Vue: 'vue'
-})
+
+module.exports = {
+    plugins: [
+      new webpack.ProvidePlugin({
+          Vue: 'vue'
+      })
+    ]
+}
 ```
 
 ## webpack 命令行的几种基本命令
@@ -86,7 +105,7 @@ module.exports = {
           compress: {
               warnings: false
           },
-      }),
+      })
     ]
 }
 ```
@@ -119,7 +138,7 @@ module.exports = {
 * --colors - Yay，命令行中显示颜色！
 * --content-base build - 指向设置的输出目录
 
-## 查找依赖
+## extensions 默认后缀
 
 Webpack 是类似 Browserify 那样在本地按目录对依赖进行查找的 可以构造一个例子, 用 --display-error-details 查看查找过程, 例子当中 resolve.extensions 用于指明程序自动补全识别哪些后缀, 注意一下, extensions 第一个是空字符串! 对应不需要后缀的情况
 
@@ -129,40 +148,10 @@ Webpack 是类似 Browserify 那样在本地按目录对依赖进行查找的 �
 module.exports = {
     entry: './a.js',
     output: {
-    filename: 'b.js'
+        filename: 'b.js'
     },
     resolve: {
-    extensions: ['', '.coffee', '.js']
+        extensions: ['', '.coffee', '.js']
     }
 }
-```
-
-* a.js
-
-./c 是不存在, 从这个错误信息当中我们大致能了解 Webpack 是怎样查找的 大概就是会尝试各种文件名, 会尝试作为模块, 等等 一般模块就是查找 node_modules, 但这个也是能被配置的:
-
-`require('./c')`
-
-```
-➤➤ webpack --display-error-details
-Hash: e38f7089c39a1cf34032
-Version: webpack 1.5.3
-Time: 54ms
-Asset  Size  Chunks             Chunk Names
- b.js  1646       0  [emitted]  main
-   [0] ./a.js 15 {0} [built] [1 error]
-
-ERROR in ./a.js
-Module not found: Error: Cannot resolve 'file' or 'directory' ./c in /Users/chen/Drafts/webpack/details
-resolve file
-  /Users/chen/Drafts/webpack/details/c doesn't exist
-  /Users/chen/Drafts/webpack/details/c.coffee doesn't exist
-  /Users/chen/Drafts/webpack/details/c.js doesn't exist
-resolve directory
-  /Users/chen/Drafts/webpack/details/c doesn't exist (directory default file)
-  /Users/chen/Drafts/webpack/details/c/package.json doesn't exist (directory description file)
-[/Users/chen/Drafts/webpack/details/c]
-[/Users/chen/Drafts/webpack/details/c.coffee]
-[/Users/chen/Drafts/webpack/details/c.js]
- @ ./a.js 2:0-14
 ```

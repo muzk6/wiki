@@ -56,7 +56,7 @@ Out
 
 * npm dependencies
 
-`npm install --save-dev babel-loader babel-core babel-preset-react babel-preset-es2015 react react-dom`
+`npm install --save-dev babel-loader babel-core babel-preset-es2015 babel-preset-react react react-dom`
 
 * webpack.config.js
 

@@ -43,7 +43,7 @@ url-loader 传入的 limit 参数是告诉它图片如果不大于 10KB 的话�
 
 * loader
 
-`npm i --save-dev image-loader url-loader file-loader`
+`npm i --save-dev url-loader file-loader`
 
 * setting
 
@@ -51,10 +51,7 @@ url-loader 传入的 limit 参数是告诉它图片如果不大于 10KB 的话�
 module: {
     loaders: [{
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loaders: [
-            'image?{bypassOnDebug: true, progressive:true, optimizationLevel: 3, pngquant:{quality: "65-80"}}',
-            'url?limit=10000&name=img/[hash:8].[name].[ext]',
-        ]
+        loader: 'url?limit=10000&name=img/[hash:8].[name].[ext]'
     }]
 }
 ```

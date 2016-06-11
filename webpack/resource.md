@@ -4,7 +4,7 @@
 
 加载 CSS 需要 css-loader 和 style-loader，他们做两件不同的事情，css-loader会遍历 CSS 文件，然后找到 url() 表达式然后处理他们，style-loader 会把原来的 CSS 代码插入页面中的一个 style 标签中
 
-`npm install css-loader style-loader --save-dev`
+`npm install --save-dev css-loader style-loader`
 
 * 直接嵌入到html的style元素中
 
@@ -19,7 +19,7 @@ module: {
 
 * 独立出CSS文件来
 
-`npm install extract-text-webpack-plugin --save`
+`npm install --save-dev extract-text-webpack-plugin`
 
 ```
 var ExtractTextPlugin = require("extract-text-webpack-plugin");

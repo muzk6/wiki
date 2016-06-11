@@ -53,7 +53,7 @@ deps.node.forEach(function (dep) {
     let depPath = path.resolve(nodeModulesDir, dep);
     config.entry.vendors.push(depPath);
     config.module.noParse.push(depPath);
-    config.resolve.alias[dep.split(path.sep)[0]] = depPath;
+    config.resolve.alias[dep.split('/')[0]] = depPath;
 });
 
 for (let name in deps.etc) {

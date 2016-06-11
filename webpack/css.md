@@ -13,8 +13,8 @@
 ```
 module: {
     loaders: [{
-        test: /\.css$/, // Only .css files
-        loaders: ['style', 'css'] // Run both loaders
+        test: /\.css$/, // 只对css后缀的文件
+        loaders: ['style', 'css'] // 从右到左依次执行，顺序不能顺序换
     }]
 }
 ```

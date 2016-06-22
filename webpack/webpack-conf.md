@@ -17,14 +17,7 @@ var nodeModulesDir = path.resolve(__dirname, 'node_modules');
 var libDir = path.resolve(__dirname, 'library');
 
 var deps = {
-    'node': [
-        'jquery/dist/jquery.min.js',
-        'react/dist/react.min.js',
-        'react-dom/dist/react-dom.min.js'
-    ],
-    'etc': {
-        'othername': path.resolve(libDir, 'othername.js')
-    }
+    'othername': path.resolve(libDir, 'othername.js')
 };
 
 var config = {
@@ -49,15 +42,8 @@ var config = {
     ]
 };
 
-deps.node.forEach(function (dep) {
-    let depPath = path.resolve(nodeModulesDir, dep);
-    config.entry.vendors.push(depPath);
-    config.module.noParse.push(depPath);
-    config.resolve.alias[dep.split('/')[0]] = depPath;
-});
-
-for (let name in deps.etc) {
-    let depPath = deps.etc[name];
+for (let name in deps) {
+    let depPath = deps[name];
     config.entry.vendors.push(depPath);
     config.module.noParse.push(depPath);
     config.resolve.alias[name] = depPath;
@@ -104,7 +90,7 @@ module.exports = {
       new webpack.optimize.UglifyJsPlugin({
           compress: {
               warnings: false
-          },
+          }
       })
     ]
 }

@@ -6,7 +6,6 @@
 [xdebug]
 zend_extension="D:/xampp/php/ext/php_xdebug.dll"
 xdebug.remote_autostart=on
-xdebug.remote_enable=on
 xdebug.remote_enable=1
 xdebug.remote_mode="req"
 ;xdebug.remote_log="/var/log/xdebug.log"

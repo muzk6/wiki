@@ -27,4 +27,8 @@
 * 安全更新目录，不会去更新下载依赖
 * 例如修改了配置的 psr-4 ，就会按照配置去更新命名空间
 
-`composer update --lock`
+    `composer update --lock`
+
+* 更新自动加载映射还可以
+
+    `composer dump-autoload`
